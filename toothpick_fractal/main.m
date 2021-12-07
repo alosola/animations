@@ -5,12 +5,22 @@ clear all
 global MainA
 global MACounter
 
-MainA = [1 0; -1 0];
-
 iter = 60; % number of fractal iterations
 loops = iter-1; % number of loops calculated
+
+MainA = zeros(400,2,iter);
+MainA = [1 0; -1 0];
+
 lines_per_iter = zeros(1,iter);
 lines_per_iter(1) = 1;
+
+% ignorable after a box is closed
+boxClose = zeros(1,20);
+boxClose = 1;
+BCC = 1;
+ignoreable=1;
+maxx=-1;
+maxy=-1;
 
 %% Initialize graph and animation
 
@@ -45,7 +55,7 @@ end
 for step=1:loops
 
     % Calculate lines for this iteration
-    lines_per_iter = toothpick_iteration(step, lines_per_iter);
+    lines_per_iter = toothpick_iteration(step, lines_per_iter, maxx, maxy, BCC, ignoreable);
 
     if animation
         [im, imsize] = plot_iteration(step, lines_per_iter, imsize, im, colour, figure_toothpick);
