@@ -7,81 +7,75 @@ global MACounter
 
 MainA = [1 0; -1 0];
 
-iter = 50; % number of fractal iterations
+iter = 60; % number of fractal iterations
 loops = iter-1; % number of loops calculated
 lines_per_iter = zeros(1,iter);
 lines_per_iter(1) = 1;
 
-%% Initialize graph
-colour = hsv(iter); % colourmap for the fractal image
-imsize = 5;
+%% Initialize graph and animation
+
+% set to 1 for animated gif, set to 0 for static graph of fractal
+animation = 1;
+
+% set to 1 for plot of lines per iteration
+plot_lines_per_iteration = 0;
+
+% select colour scheme for the fractal image
+% select a number between 1 and 19
+colour = select_color(3,iter);
+
 figure_toothpick = figure(1);
 title('Toothpick fractal')
-im = cell(1,loops);
-xlim([-imsize,imsize])
-ylim([-imsize,imsize])
 hold on
+box on
+
+if animation
+    duration = 4; % duration of gif in seconds
+    looped_gif = 1; % 1 for looped gif
+    imsize = 5;
+    xlim([-imsize,imsize])
+    ylim([-imsize,imsize])
+
+    % initialize the frame collection
+    im = cell(1,loops);
+end
 
 
 %% Calculate each iteration
 for step=1:loops
 
-    MACounter = 1;
+    % Calculate lines for this iteration
+    lines_per_iter = toothpick_iteration(step, lines_per_iter);
 
-    % Calulate each line
-    for nA = 1:lines_per_iter(step)*2
-
-        % current line in current iteration
-        t1 = [MainA(nA,1,step),MainA(nA,2,step)];
-
-        % Calculate non-repeated lines
-        if (repeated(step, lines_per_iter, nA, t1) == 0)
-
-            if rem(step, 2) == 0
-                % for horizontal lines
-                addxy(1,0,nA,step);
-                addxy(-1,0,nA,step);
-            else
-                % for vertical lines
-                addxy(0,1,nA,step);
-                addxy(0,-1,nA,step);
-            end
-
-        end
-    end
-    % Register lines added in this iteration
-    lines_per_iter(step+1) = (MACounter - 1) / 2;
-
-    %% Plot lines from this iteration
-    for nA=1:lines_per_iter(step)
-        plot([MainA(nA*2-1,1,step),MainA(nA*2,1,step)],[MainA(nA*2-1,2,step),MainA(nA*2,2,step)],'Color',colour(step,:));
+    if animation
+        [im, imsize] = plot_iteration(step, lines_per_iter, imsize, im, colour, figure_toothpick);
     end
 
-    if (mod(step,5)==0)
-        imsize = imsize + 2;
-        xlim([-imsize,imsize])
-        ylim([-imsize,imsize])
-    end
-    xlabel(sprintf('Iteration %i', step));
-    frame = getframe(figure_toothpick);
-    im{step} = frame2im(frame);
-
-    %%
 end
 
-%% Save image frames to gif
 
-delay = 2/loops; % gif will be 2 seconds long
-writegif('toothpick.gif',im,loops,delay);
-hold off
+
+%% Save image frames to gif, or plot static image
+
+if animation
+    delay = duration/loops; % gif will be 2 seconds long
+    writegif('toothpick.gif',im,loops,delay);
+    hold off
+else
+    for step=1:loops
+        plot_lines(step, lines_per_iter, colour)
+    end
+end
 
 
 %% Plot the number of lines per iteration
 
-figure(2);
-hold on
-title('Number of lines added per iteration')
-plot(1+linspace(0,iter,iter),lines_per_iter,'.-')
-xlabel('iteration')
-ylabel('new lines')
-xlim([1,iter])
+if plot_lines_per_iteration
+    figure(2);
+    hold on
+    title('Number of lines added per iteration')
+    plot(1+linspace(0,iter,iter),lines_per_iter,'.-','LineWidth',2)
+    xlabel('iteration')
+    ylabel('new lines')
+    xlim([1,iter])
+end
