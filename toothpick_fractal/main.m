@@ -26,17 +26,16 @@ hold on
 %% Calculate each iteration
 for step=1:loops
 
-    Lines = (size(MainA)); % number of lines in the iteration
     MACounter = 1;
 
     % Calulate each line
-    for nA = 1:Lines(1)
+    for nA = 1:lines_per_iter(step)*2
 
         % current line in current iteration
         t1 = [MainA(nA,1,step),MainA(nA,2,step)];
 
         % Calculate non-repeated lines
-        if (repeated(step, Lines, nA, t1) == 0)
+        if (repeated(step, lines_per_iter, nA, t1) == 0)
 
             if rem(step, 2) == 0
                 % for horizontal lines
