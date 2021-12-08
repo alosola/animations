@@ -98,7 +98,7 @@ end
 
 if animation
     delay = duration/loops; % gif will be 2 seconds long
-    writegif('toothpick.gif',im,loops,delay);
+    writegif('result_gif.gif',im,loops,delay);
     hold off
 else
     for step=1:loops
@@ -118,3 +118,11 @@ end
 %     ylabel('new lines')
 %     xlim([1,iter])
 % end
+
+%% Save run
+
+% save the result variables
+save('result_variables.mat','MainA','lines_per_iter','times_per_iter')
+
+% save the final image
+saveas(figure_toothpick, "result_image.png", 'png')
