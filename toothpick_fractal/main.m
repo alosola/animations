@@ -5,7 +5,7 @@ clear all
 global MainA
 global MACounter
 
-iter = 100; % number of fractal iterations
+iter = 30; % number of fractal iterations
 loops = iter-1; % number of loops calculated
 
 MainA = zeros(400,2,iter);
@@ -122,7 +122,7 @@ end
 %% Save run
 
 % save the result variables
-save('result_variables.mat','MainA','lines_per_iter','times_per_iter')
+save('result_variables.mat')
 
 % save the final image
 saveas(figure_toothpick, "result_image.png", 'png')
