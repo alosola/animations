@@ -5,7 +5,7 @@ clear all
 global MainA
 global MACounter
 
-iter = 30; % number of fractal iterations
+iter = 100; % number of fractal iterations
 loops = iter-1; % number of loops calculated
 
 MainA = zeros(400,2,iter);
@@ -67,7 +67,7 @@ if animation
     hold on
     title('Time per iteration')
     xlabel('iteration')
-    ylabel('time spent ms')
+    ylabel('time spent [s]')
 %     xlim([1,iter])
     box on
 
@@ -75,21 +75,29 @@ if animation
     im = cell(1,loops);
 end
 
-% start timer
-tic
-
 %% Calculate each iteration
 for step=1:loops
 
+    % start timer
+    tic
+
     % Calculate lines for this iteration
     lines_per_iter = toothpick_iteration(step, lines_per_iter, maxx, maxy, BCC, ignoreable);
+    
     times_per_iter(step) = toc;
+%     if (step == 1)
+%         times_per_iter(step) = toc;
+%     else
+%         toc
+%         times_per_iter(step) = toc - times_per_iter(step-1);
+%     end
 
     if animation
         [im, imsize] = plot_iteration(step, lines_per_iter, times_per_iter, imsize, im, colour, figure_toothpick);
     else
         disp(step)
     end
+
 end
 
 
