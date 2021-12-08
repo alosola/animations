@@ -7,7 +7,7 @@ subplot(2,2,[1,3]);
 plot_lines(step, lines_per_iter, colour)
 
 if (mod(step,10)==0)
-    imsize = max([(imsize + 5),(imsize + step/10),max(MainA,[],'all')]);
+    imsize = max([(imsize + 5),max(MainA,[],'all')]);
     xlim([-imsize,imsize])
     ylim([-imsize,imsize])
 end
