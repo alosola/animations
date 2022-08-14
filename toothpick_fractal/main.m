@@ -5,7 +5,7 @@ clear all
 global MainA
 global MACounter
 
-iter = 100; % number of fractal iterations
+iter = 25; % number of fractal iterations
 loops = iter-1; % number of loops calculated
 
 MainA = zeros(400,2,iter);
@@ -55,7 +55,7 @@ if animation
     title('Number of lines added per iteration')
     xlabel('iteration')
     ylabel('new lines')
-%     xlim([1,iter])
+    %     xlim([1,iter])
     box on
 
     % initialize the frame collection
@@ -68,7 +68,7 @@ if animation
     title('Time per iteration')
     xlabel('iteration')
     ylabel('time spent [s]')
-%     xlim([1,iter])
+    %     xlim([1,iter])
     box on
 
     % initialize the frame collection
@@ -83,19 +83,23 @@ for step=1:loops
 
     % Calculate lines for this iteration
     lines_per_iter = toothpick_iteration(step, lines_per_iter, maxx, maxy, BCC, ignoreable);
-    
+
     times_per_iter(step) = toc;
-%     if (step == 1)
-%         times_per_iter(step) = toc;
-%     else
-%         toc
-%         times_per_iter(step) = toc - times_per_iter(step-1);
-%     end
+    %     if (step == 1)
+    %         times_per_iter(step) = toc;
+    %     else
+    %         toc
+    %         times_per_iter(step) = toc - times_per_iter(step-1);
+    %     end
 
     if animation
         [im, imsize] = plot_iteration(step, lines_per_iter, times_per_iter, imsize, im, colour, figure_toothpick);
     else
+        disp('Iteration:')
         disp(step)
+
+        disp('Time per iteration (seconds):')
+        disp(times_per_iter(step))
     end
 
 end
@@ -106,10 +110,11 @@ end
 
 if animation
     delay = duration/loops; % gif will be 2 seconds long
-    writegif('result_gif.gif',im,loops,delay);
+     writegif('result_gif.gif',im,loops,delay);
     hold off
 else
     for step=1:loops
+        hold on
         plot_lines(step, lines_per_iter, colour)
     end
 end
